@@ -14,7 +14,7 @@ import org.camunda.bpm.extension.keycloak.cache.QueryCache;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 
 /**
- * @author aot
+ *
  *
  */
 public class KeycloakIdentityProviderFactory

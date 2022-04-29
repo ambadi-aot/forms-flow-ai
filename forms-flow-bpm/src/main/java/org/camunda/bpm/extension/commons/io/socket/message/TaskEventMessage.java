@@ -6,6 +6,11 @@ import lombok.ToString;
 
 import java.io.Serializable;
 
+/**
+ * Task Event Message.
+ *
+ */
+
 @Data
 @NoArgsConstructor
 @ToString

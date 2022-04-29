@@ -2,6 +2,10 @@ package org.camunda.bpm.extension.commons.utils;
 
 import java.text.MessageFormat;
 
+/**
+ * RestAPI Builder Util.
+ *
+ */
 public class RestAPIBuilderUtil {
 
     private static RestAPIBuilderUtil instance;

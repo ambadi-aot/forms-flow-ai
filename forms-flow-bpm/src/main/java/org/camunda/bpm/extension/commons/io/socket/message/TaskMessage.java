@@ -10,9 +10,8 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Transfer object for task
+ * Task Message.
  *
- * @author sumathi.thirumani@aot-technologies.com
  */
 @Data
 @NoArgsConstructor

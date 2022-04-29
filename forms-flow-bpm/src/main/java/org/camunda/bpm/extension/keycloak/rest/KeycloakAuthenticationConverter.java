@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
- * @author Carsten Buchberger
+ *
  */
 @Component
 public class KeycloakAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {

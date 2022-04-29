@@ -22,7 +22,7 @@ import org.camunda.bpm.extension.keycloak.util.KeycloakPluginLogger;
 import org.springframework.util.StringUtils;
 
 /**
- * @author aot
+ *
  *
  */
 public class KeycloakIdentityProviderSession

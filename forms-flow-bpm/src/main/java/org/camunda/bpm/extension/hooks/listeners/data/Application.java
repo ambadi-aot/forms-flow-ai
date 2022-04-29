@@ -5,8 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @author Sumathi Thirumani
- * @author Shibin Thomas
+ * Application.
+ * Transfer objects for Application.
  */
 @Data
 @NoArgsConstructor

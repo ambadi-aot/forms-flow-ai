@@ -6,8 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @author Sumathi Thirumani
- * @author Shibin Thomas
+ *
  */
 @Data
 @NoArgsConstructor
