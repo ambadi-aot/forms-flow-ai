@@ -6,7 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- *
+ * Form Submission.
+ * Class to hold Form submission data.
  */
 @Data
 @NoArgsConstructor

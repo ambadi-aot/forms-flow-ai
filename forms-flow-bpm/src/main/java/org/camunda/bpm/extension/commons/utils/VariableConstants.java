@@ -2,7 +2,7 @@ package org.camunda.bpm.extension.commons.utils;
 
 /**
  * Variable Constants.
- *
+ * Utility class for storing variable constants.
  */
 public class VariableConstants {
 

@@ -4,7 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- *
+ * Form Element.
+ * Holds Form Element data.
  */
 @Data
 @NoArgsConstructor

@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * Application.
- * Transfer objects for Application.
+ * Holds Application data.
  */
 @Data
 @NoArgsConstructor

@@ -4,7 +4,7 @@ import java.text.MessageFormat;
 
 /**
  * RestAPI Builder Util.
- *
+ * Utility class for storing and transferring data required for Rest API URL.
  */
 public class RestAPIBuilderUtil {
 

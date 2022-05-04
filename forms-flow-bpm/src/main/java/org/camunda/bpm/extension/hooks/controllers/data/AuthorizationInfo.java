@@ -10,7 +10,7 @@ import java.util.Set;
 
 /**
  * Authorization Info.
- * Transfer objects for querying authorization.
+ * Class for holding authorization information data.
  */
 
 @Data

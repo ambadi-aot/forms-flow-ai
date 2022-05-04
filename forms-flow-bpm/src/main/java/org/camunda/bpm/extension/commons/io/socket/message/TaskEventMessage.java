@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 /**
  * Task Event Message.
- *
+ * Class for holding TaskEvent data.
  */
 
 @Data

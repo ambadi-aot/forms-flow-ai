@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  * Task Message.
- *
+ * Class for holding Task data.
  */
 @Data
 @NoArgsConstructor
