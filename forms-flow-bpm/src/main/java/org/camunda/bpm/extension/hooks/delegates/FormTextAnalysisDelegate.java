@@ -32,6 +32,7 @@ import java.util.Map;
 
 import static org.camunda.bpm.extension.commons.utils.VariableConstants.FORM_URL;
 import static org.camunda.bpm.extension.commons.utils.VariableConstants.APPLICATION_ID;
+import static org.camunda.bpm.extension.commons.utils.VariableConstants.ANALYTICS_TEXT_AREA;
 
 /**
  * Form Text Analysis Delegate.
@@ -111,7 +112,7 @@ public class FormTextAnalysisDelegate implements JavaDelegate {
     }
 
     private String getSentimentCategory() {
-        return "textAreaWithAnalytics";
+        return ANALYTICS_TEXT_AREA;
     }
 
 }
