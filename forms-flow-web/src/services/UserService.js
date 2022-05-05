@@ -17,6 +17,7 @@ import {AppConfig} from '../config';
 import {WEB_BASE_URL , WEB_BASE_CUSTOM_URL} from "../apiManager/endpoints/config";
 
 import {_kc} from "../constants/tenantConstant";
+import { setLanguage } from "../actions/languageSetAction";
 
 const jwt = require("jsonwebtoken");
 
@@ -45,6 +46,7 @@ const initKeycloak = (store, ...rest) => {
           const UserRoles = KeycloakData.resourceAccess[Keycloak_Client].roles;
           store.dispatch(setUserRole(UserRoles));
           store.dispatch(setUserToken(KeycloakData.token));
+          store.dispatch(setLanguage(KeycloakData.tokenParsed.locale||'en'));
           //Set Cammunda/Formio Base URL
           setApiBaseUrlToLocalStorage();
 
@@ -70,18 +72,33 @@ const initKeycloak = (store, ...rest) => {
       }
     });
 };
+
+const getTokenExpireTime =(keycloak)=>{
+  const {exp, iat} = keycloak.tokenParsed;
+  if(exp&&iat){
+    const toeknExpiretime =new Date(exp).getMilliseconds()-new Date(iat).getMilliseconds()
+    return toeknExpiretime*1000
+  }else{
+    return 60000
+  }
+}
+
+
 let refreshInterval;
 const refreshToken = (store) => {
+  const refreshTime = getTokenExpireTime(KeycloakData)
   refreshInterval = setInterval(() => {
     KeycloakData && KeycloakData.updateToken(5).then((refreshed)=> {
       if (refreshed) {
-        store.dispatch(setUserToken(KeycloakData.token));
+         clearInterval(refreshInterval)
+         store.dispatch(setUserToken(KeycloakData.token));
+         refreshToken(store)
       }
     }).catch( (error)=> {
       console.log(error);
       userLogout();
     });
-  }, 6000);
+  }, refreshTime);
 }
 
 
@@ -89,7 +106,9 @@ const refreshToken = (store) => {
  * Logout function
  */
 const userLogout = () => {
+  const language=localStorage.getItem("lang")
   localStorage.clear();
+  localStorage.setItem("lang",language)
   sessionStorage.clear();
   clearInterval(refreshInterval);
   doLogout();
