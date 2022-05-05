@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 import static org.camunda.bpm.extension.commons.utils.VariableConstants.FORM_URL;
 import static org.camunda.bpm.extension.commons.utils.VariableConstants.APPLICATION_ID;
+
 /**
  * Form BPM Filtered Data Pipeline Listener.
  * This class copies specific data from form document data into CAM variables.

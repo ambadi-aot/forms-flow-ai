@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static org.camunda.bpm.extension.commons.utils.VariableConstants.APPLICATION_ID;
+
 /**
  * Application State Listener.
  * This class updates the application state and also capture audit.

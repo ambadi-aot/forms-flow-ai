@@ -13,4 +13,5 @@ public class VariableConstants {
     public static final String FORM_URL = "formUrl";
 
     public static final String APPLICATION_STATUS = "applicationStatus";
+
 }

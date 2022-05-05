@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.camunda.bpm.extension.commons.utils.VariableConstants.FORM_URL;
+import static org.camunda.bpm.extension.commons.utils.VariableConstants.APPLICATION_ID;
+
 /**
  * External Submission Listener.
  * This class supports creation of submission for instances created from external system
@@ -86,7 +88,7 @@ public class ExternalSubmissionListener extends BaseListener implements Executio
         if(response.getStatusCode().value() == HttpStatus.CREATED.value()) {
             JsonNode jsonNode = bpmObjectMapper.readTree(response.getBody());
             String applicationId = jsonNode.get("id").asText();
-            execution.setVariable("applicationId", applicationId);
+            execution.setVariable(APPLICATION_ID, applicationId);
         } else {
             if(retryOnce) {
                 LOGGER.warn("Retrying the application create once more due to previous failure");
