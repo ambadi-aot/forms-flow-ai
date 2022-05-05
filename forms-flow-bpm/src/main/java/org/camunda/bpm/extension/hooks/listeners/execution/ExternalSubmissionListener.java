@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.camunda.bpm.extension.commons.utils.VariableConstants.FORM_URL;
 /**
  * External Submission Listener.
  * This class supports creation of submission for instances created from external system
@@ -50,7 +51,7 @@ public class ExternalSubmissionListener extends BaseListener implements Executio
             String formUrl = getFormUrl(execution);
             String submissionId = formSubmissionService.createSubmission(formUrl, formSubmissionService.createFormSubmissionData(execution.getVariables()));
             if(StringUtils.isNotBlank(submissionId)){
-                execution.setVariable("formUrl", formUrl+"/"+submissionId);
+                execution.setVariable(FORM_URL, formUrl+"/"+submissionId);
                 createApplication(execution, true);
             }
         } catch(IOException | RuntimeException ex) {
@@ -76,8 +77,8 @@ public class ExternalSubmissionListener extends BaseListener implements Executio
      */
     private void createApplication(DelegateExecution execution, boolean retryOnce) throws JsonProcessingException {
         Map<String,Object> data = new HashMap<>();
-        String formUrl = String.valueOf(execution.getVariable("formUrl"));
-        data.put("formUrl",formUrl);
+        String formUrl = String.valueOf(execution.getVariable(FORM_URL));
+        data.put(FORM_URL,formUrl);
         data.put("formId",StringUtils.substringBetween(formUrl, "/form/", "/submission/"));
         data.put("submissionId",StringUtils.substringAfter(formUrl, "/submission/"));
         data.put("processInstanceId",execution.getProcessInstanceId());

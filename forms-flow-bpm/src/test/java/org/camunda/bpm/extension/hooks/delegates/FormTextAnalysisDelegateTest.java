@@ -28,6 +28,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
+import static org.camunda.bpm.extension.commons.utils.VariableConstants.FORM_URL;
+import static org.camunda.bpm.extension.commons.utils.VariableConstants.APPLICATION_ID;
+
 /**
  * Form Text Analysis Delegate Test.
  * Test class for FormTextAnalysisDelegate.
@@ -66,14 +69,14 @@ public class FormTextAnalysisDelegateTest {
         Map<String, Object> variable = new HashMap<>();
         String data = "{\"data\":{\"formId\":\"123\",\"formName\":\"New Business Licence\"," +
                 "\"description\":{\"type\":\"textAreaWithAnalytics\",\"topics\":[\"t1\",\"t2\"],\"text\":\"test\"}}}";
-        variable.put("formUrl", "http://localhost:3001/submission/id1");
-        variable.put("applicationId", 123);
+        variable.put(FORM_URL, "http://localhost:3001/submission/id1");
+        variable.put(APPLICATION_ID, 123);
         when(execution.getVariables())
                 .thenReturn(variable);
-        when(execution.getVariable("formUrl"))
-                .thenReturn(variable.get("formUrl"));
-        when(execution.getVariable("applicationId"))
-                .thenReturn(variable.get("applicationId"));
+        when(execution.getVariable(FORM_URL))
+                .thenReturn(variable.get(FORM_URL));
+        when(execution.getVariable(APPLICATION_ID))
+                .thenReturn(variable.get(APPLICATION_ID));
         when(formSubmissionService.readSubmission(anyString()))
                 .thenReturn(data);
         List<TextSentimentData> txtRecords = new ArrayList<>();
@@ -104,7 +107,7 @@ public class FormTextAnalysisDelegateTest {
     public void formTextAnalysisDelegate_with_nullSubmissionData() throws Exception {
         DelegateExecution execution = mock(DelegateExecution.class);
         Map<String, Object> variable = new HashMap<>();
-        variable.put("formUrl", "http://localhost:3001/submission/id1");
+        variable.put(FORM_URL, "http://localhost:3001/submission/id1");
         when(execution.getVariables())
                 .thenReturn(variable);
         when(formSubmissionService.readSubmission(anyString()))
@@ -122,7 +125,7 @@ public class FormTextAnalysisDelegateTest {
     public void formTextAnalysisDelegate_with_emptySubmissionData() throws Exception {
         DelegateExecution execution = mock(DelegateExecution.class);
         Map<String, Object> variable = new HashMap<>();
-        variable.put("formUrl", "http://localhost:3001/submission/id1");
+        variable.put(FORM_URL, "http://localhost:3001/submission/id1");
         when(execution.getVariables())
                 .thenReturn(variable);
         when(formSubmissionService.readSubmission(anyString()))
