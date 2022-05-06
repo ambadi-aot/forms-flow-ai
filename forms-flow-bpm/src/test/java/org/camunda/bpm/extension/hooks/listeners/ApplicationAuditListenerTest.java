@@ -22,6 +22,10 @@ import static org.mockito.Mockito.*;
 import java.io.IOException;
 import java.util.Properties;
 
+import static org.camunda.bpm.extension.commons.utils.VariableConstants.FORM_URL;
+import static org.camunda.bpm.extension.commons.utils.VariableConstants.APPLICATION_STATUS;
+import static org.camunda.bpm.extension.commons.utils.VariableConstants.APPLICATION_ID;
+
 /**
  * Application AuditListener Test.
  * Test class for ApplicationAuditListener
