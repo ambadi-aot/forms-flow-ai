@@ -16,7 +16,7 @@ public class VariableConstants {
 
     public static final String SUBMITTER_NAME = "submitterName";
 
-    public static final String GROUP_NAME = q"groupName";
+    public static final String GROUP_NAME = "groupName";
 
     public static final String EMAIL_CC = "email_cc";
 
