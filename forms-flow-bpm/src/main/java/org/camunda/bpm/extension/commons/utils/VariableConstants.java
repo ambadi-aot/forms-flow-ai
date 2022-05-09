@@ -27,4 +27,5 @@ public class VariableConstants {
     public static final String EMAIL_SUBJECT = "email_subject";
 
     public static final String TEMPLATE = "template";
+
 }
