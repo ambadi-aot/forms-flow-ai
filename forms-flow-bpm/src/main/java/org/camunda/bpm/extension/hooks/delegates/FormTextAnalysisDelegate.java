@@ -98,7 +98,7 @@ public class FormTextAnalysisDelegate implements JavaDelegate {
         }
         ResponseEntity<String> response = httpServiceInvoker.execute(getFormUrl(execution), HttpMethod.PATCH, elements);
         if(response.getStatusCodeValue() != HttpStatus.OK.value()) {
-            throw new FormioServiceException("Unable to get patch values for: "+ getFormUrl(execution) + ". Message Body: " +
+            throw new FormioServiceException("Unable to get patch values for: "+ getFormUrl(execution)+ ". Message Body: " +
                     response.getBody());
         }
     }
