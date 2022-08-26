@@ -6,9 +6,6 @@ import _set from "lodash/set";
 import _cloneDeep from "lodash/cloneDeep";
 import _camelCase from "lodash/camelCase";
 import {
-  SUBMISSION_ACCESS,
-  ANONYMOUS_ID,
-  FORM_ACCESS,
   MULTITENANCY_ENABLED,
 } from "../../../constants/constants";
 import { addHiddenApplicationComponent } from "../../../constants/applicationComponent";
@@ -61,8 +58,13 @@ const Edit = React.memo(() => {
     (state) => state.process.applicationCount
   );
   const tenantKey = useSelector((state) => state.tenants?.tenantId);
+  const formAccess = useSelector((state) => state.user?.formAccess || []);
+  const roleIds = useSelector((state) => state.user?.roleIds || {});
+  const submissionAccess = useSelector((state) => state.user?.submissionAccess || []);
   const redirectUrl = MULTITENANCY_ENABLED ? `/tenant/${tenantKey}/` : "/";
   const saveText = <Translation>{(t) => t("Save Form")}</Translation>;
+  const [formSubmitted , setFormSubmitted] = useState(false);
+
   const lang = useSelector((state) => state.user.lang);
   const history = useHistory();
   const { t } = useTranslation();
@@ -75,7 +77,6 @@ const Edit = React.memo(() => {
     setShow(false);
     saveFormData();
   };
-
   //remove tenatkey form path name
   useEffect(() => {
     if (form.path && MULTITENANCY_ENABLED) {
@@ -107,9 +108,9 @@ const Edit = React.memo(() => {
   }, [formData, form]);
 
   // set the anonymous value
-  const changeAnonymous = (setvalue) => {
+  const changeAnonymous = (setvalue,goBack) => {
     let latestValue =
-      setvalue !== undefined ? setvalue : !processListData.anonymous;
+      goBack ? setvalue : !processListData.anonymous;
     let newData = {
       ...processListData,
       anonymous: latestValue,
@@ -119,26 +120,26 @@ const Edit = React.memo(() => {
 
   //  chaning the form access
   useEffect(() => {
-    FORM_ACCESS.forEach((role) => {
+    formAccess.forEach((role) => {
       if (processListData.anonymous) {
         if (role.type === "read_all") {
-          role.roles.push(ANONYMOUS_ID);
+          role.roles.push(roleIds.ANONYMOUS);
         }
       } else {
         if (role.type === "read_all") {
-          role.roles = role.roles.filter((id) => id !== ANONYMOUS_ID);
+          role.roles = role.roles.filter((id) => id !== roleIds.ANONYMOUS);
         }
       }
     });
 
-    SUBMISSION_ACCESS.forEach((access) => {
+    submissionAccess.forEach((access) => {
       if (processListData.anonymous) {
         if (access.type === "create_own") {
-          access.roles.push(ANONYMOUS_ID);
+          access.roles.push(roleIds.ANONYMOUS);
         }
       } else {
         if (access.type === "create_own") {
-          access.roles = access.roles.filter((id) => id !== ANONYMOUS_ID);
+          access.roles = access.roles.filter((id) => id !== roleIds.ANONYMOUS);
         }
       }
     });
@@ -167,9 +168,10 @@ const Edit = React.memo(() => {
 
   // save form data to submit
   const saveFormData = () => {
+    setFormSubmitted(true);
     const newFormData = addHiddenApplicationComponent(form);
-    newFormData.submissionAccess = SUBMISSION_ACCESS;
-    newFormData.access = FORM_ACCESS;
+    newFormData.submissionAccess = submissionAccess;
+    newFormData.access = formAccess;
     if (MULTITENANCY_ENABLED && tenantKey) {
       if (newFormData.path) {
         newFormData.path = addTenankey(newFormData.path, tenantKey);
@@ -219,6 +221,7 @@ const Edit = React.memo(() => {
           toast.success(t("Form Saved"));
           dispatch(push(`${redirectUrl}formflow/${submittedData._id}/preview`));
         } else {
+          setFormSubmitted(false);
           toast.error(t("Error while saving Form"));
         }
       })
@@ -283,7 +286,7 @@ const Edit = React.memo(() => {
               <span
                 className="btn btn-secondary"
                 onClick={() => {
-                  changeAnonymous(prviousData.anonymous);
+                  changeAnonymous(prviousData.anonymous,true);
                   history.goBack();
                   dispatch(clearFormError("form", formData.formName));
                 }}
@@ -294,12 +297,13 @@ const Edit = React.memo(() => {
           </div>
           <div id="save-buttons" className=" save-buttons pull-right">
             <div className="form-group pull-right">
-              <span
+              <button
                 className="btn btn-primary"
+                disabled={formSubmitted}
                 onClick={() => saveFormWithDataChangeCheck()}
               >
                 {saveText}
-              </span>
+              </button>
               <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                   <Modal.Title>{t("Confirmation")}</Modal.Title>

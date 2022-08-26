@@ -6,18 +6,17 @@ from http import HTTPStatus
 
 from flask import current_app
 from flask_sqlalchemy import BaseQuery
-from sqlalchemy import UniqueConstraint, and_, desc
-from sqlalchemy.dialects.postgresql import JSON
-from sqlalchemy.sql.expression import text
-
-from formsflow_api.utils import (
+from formsflow_api_utils.utils import (
     DEFAULT_PROCESS_KEY,
     DEFAULT_PROCESS_NAME,
     FILTER_MAPS,
     validate_sort_order_and_order_by,
 )
-from formsflow_api.utils.enums import FormProcessMapperStatus
-from formsflow_api.utils.user_context import UserContext, user_context
+from formsflow_api_utils.utils.enums import FormProcessMapperStatus
+from formsflow_api_utils.utils.user_context import UserContext, user_context
+from sqlalchemy import UniqueConstraint, and_, desc
+from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy.sql.expression import text
 
 from .audit_mixin import AuditDateTimeMixin, AuditUserMixin
 from .base_model import BaseModel
@@ -242,3 +241,16 @@ class FormProcessMapper(AuditDateTimeMixin, AuditUserMixin, BaseModel, db.Model)
             )
         ).first()
         return query
+
+    @classmethod
+    @user_context
+    def tenant_authorization(cls, query: BaseQuery, **kwargs):
+        """Modifies the query to include tenant check if needed."""
+        tenant_auth_query: BaseQuery = query
+        user: UserContext = kwargs["user"]
+        tenant_key: str = user.tenant_key
+        if not isinstance(query, BaseQuery):
+            raise TypeError("Query object must be of type BaseQuery")
+        if tenant_key is not None:
+            tenant_auth_query = tenant_auth_query.filter(cls.tenant == tenant_key)
+        return tenant_auth_query

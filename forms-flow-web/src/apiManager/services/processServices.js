@@ -21,6 +21,7 @@ import {
   setApplicationCountResponse,
   setUnPublishApiError,
   setResetProcess,
+  setAllDmnProcessList,
 } from "../../actions/processActions";
 import { setApplicationCount } from "../../actions/processActions";
 import { replaceUrl } from "../../helper/helper";
@@ -63,22 +64,52 @@ export const getProcessStatusList = (processId, taskId) => {
  *
  * @param  {...any} rest
  */
-export const fetchAllBpmProcesses = (...rest) => {
+export const fetchAllBpmProcesses = (excludeInternal = true, ...rest) => {
   const done = rest.length ? rest[0] : () => {};
   return (dispatch) => {
-    httpGETRequest(API.GET_BPM_PROCESS_LIST + "?latestVersion=true&excludeInternal=true", {}, UserService.getToken(), true)
+    // eslint-disable-next-line max-len
+    httpGETRequest(
+      API.GET_BPM_PROCESS_LIST +
+        `?latestVersion=true&excludeInternal=${excludeInternal}`,
+      {},
+      UserService.getToken(),
+      true
+    )
       .then((res) => {
-        if(res?.data?._embedded?.processDefinitionDtoList) {
-          dispatch(setAllProcessList(res.data._embedded.processDefinitionDtoList));
+        if (res?.data) {
+          dispatch(setAllProcessList(res.data));
           done(null, res.data);
         } else {
           dispatch(setAllProcessList([]));
-          //dispatch(setProcessLoadError(true));
         }
       })
       // eslint-disable-next-line no-unused-vars
       .catch((error) => {
-        // dispatch(setProcessStatusLoading(false));
+        dispatch(setProcessLoadError(true));
+      });
+  };
+};
+
+export const fetchAllDmnProcesses = (...rest) => {
+  const done = rest.length ? rest[0] : () => {};
+  return (dispatch) => {
+    // eslint-disable-next-line max-len
+    httpGETRequest(
+      API.GET_DMN_PROCESS_LIST + `?latestVersion=true`,
+      {},
+      UserService.getToken(),
+      true
+    )
+      .then((res) => {
+        if (res?.data) {
+          dispatch(setAllDmnProcessList(res.data));
+          done(null, res.data);
+        } else {
+          dispatch(setAllDmnProcessList([]));
+        }
+      })
+      // eslint-disable-next-line no-unused-vars
+      .catch((error) => {
         dispatch(setProcessLoadError(true));
       });
   };
@@ -231,15 +262,18 @@ export const getProcessActivities = (process_instance_id, ...rest) => {
   };
 };
 
-export const fetchDiagram = (process_key, tenant_key = null, ...rest) => {
-  let url = replaceUrl(API.PROCESSES_XML, "<process_key>", process_key);
+export const fetchDiagram = (
+  process_key,
+  tenant_key = null,
+  isDmn = false,
+  ...rest
+) => {
+  const api = isDmn ? API.DMN_XML : API.PROCESSES_XML;
+
+  let url = replaceUrl(api, "<process_key>", process_key);
 
   if (tenant_key) {
-    url = replaceUrl(
-      API.PROCESSES_XML,
-      "<process_key>",
-      process_key
-    );
+    url = replaceUrl(api, "<process_key>", process_key);
     url = url + "?tenantId=" + tenant_key;
   }
 
@@ -247,8 +281,10 @@ export const fetchDiagram = (process_key, tenant_key = null, ...rest) => {
   return (dispatch) => {
     httpGETRequest(url, {}, UserService.getToken(), true)
       .then((res) => {
-        if (res.data && res.data.bpmn20Xml) {
-          dispatch(setProcessDiagramXML(res.data.bpmn20Xml));
+        if (res.data && (isDmn ? res.data.dmnXml : res.data.bpmn20Xml)) {
+          dispatch(
+            setProcessDiagramXML(isDmn ? res.data.dmnXml : res.data.bpmn20Xml)
+          );
           // console.log('res.data.bpmn20Xml>>',res.data.bpmn20Xml);
         } else {
           dispatch(setProcessDiagramXML(""));

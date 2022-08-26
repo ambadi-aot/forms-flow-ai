@@ -213,7 +213,40 @@ export const RESOURCE_BUNDLES_ZH = {
   "Form deleted successfully":"表格删除成功",
   "Form process failed":"表单处理失败",
   "Form unpublishing Failed":"表单取消发布失败",
-  "All groups have access to the dashboard":"所有组都可以访问仪表板"
+  "All groups have access to the dashboard":"所有组都可以访问仪表板",
+  "Export PDF":"导出 PDF",
+  "Something went wrong. Please try again!":"出问题了。请再试一次！",
+  "No Dashboards Found":"未找到仪表板",
+  "Processes":"流程",
+  "Please select an existing workflow.":"请选择现有工作流程。",
+  "Create New":"创建新的",
+  "Or create new workflow or import a workflow from a local directory.":"或创建新工作流或从本地目录导入工作流。",
+  "The operation couldn't be completed. Please try after sometime":"操作无法完成。请稍后再试",
+  "Select...":"选择...",
+  "No Drafts Found":  "未找到草稿",
+  "Help":"帮助",
+  "Draft Id":"草稿 ID",
+  "Draft Name":"草稿名称",
+  "Link To Draft Submission":"链接到草稿提交",
+  "Drafts":"草稿",
+  "You can't submit this form until it is published":"在此表单发布之前，您无法提交此表单",
+  "Form not published":"表格未发布"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

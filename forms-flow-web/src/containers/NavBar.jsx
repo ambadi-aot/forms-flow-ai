@@ -6,7 +6,9 @@ import UserService from "../services/UserService";
 import {
   getUserRoleName,
   getUserRolePermission,
-  getUserInsightsPermission,
+  // TODO : modify insigth permission conditions
+  // getUserInsightsPermission,
+
 } from "../helper/user";
 import createURLPathMatchExp from "../helper/regExp/pathMatch";
 import { useTranslation } from "react-i18next";
@@ -75,7 +77,6 @@ const NavBar = React.memo(() => {
   const goToTask = () => {
     dispatch(push(`${baseUrl}task`));
   };
-
   return (
     <header>
       <Navbar
@@ -131,6 +132,21 @@ const NavBar = React.memo(() => {
                   </Nav.Link>
                 ) : null}
 
+                {getUserRolePermission(userRoles, STAFF_DESIGNER) ? (
+                  <Nav.Link
+                    as={Link}
+                    to={`${baseUrl}processes`}
+                    className={`main-nav nav-item ${
+                      pathname.match(createURLPathMatchExp("processes", baseUrl)) 
+                        ? "active-tab" 
+                        : ""
+                    }`}
+                  >
+                    <i className="fa fa-cogs fa-lg fa-fw mr-2" />
+                    {t("Processes")}
+                  </Nav.Link>
+                ) : null}
+
                 {showApplications ? (
                   getUserRolePermission(userRoles, STAFF_REVIEWER) ||
                   getUserRolePermission(userRoles, CLIENT) ? (
@@ -141,6 +157,10 @@ const NavBar = React.memo(() => {
                         pathname.match(
                           createURLPathMatchExp("application", baseUrl)
                         )
+                          ? "active-tab"
+                          : pathname.match(
+                              createURLPathMatchExp("draft", baseUrl)
+                            )
                           ? "active-tab"
                           : ""
                       }`}
@@ -173,79 +193,60 @@ const NavBar = React.memo(() => {
                 ) : null}
 
                 {getUserRolePermission(userRoles, STAFF_REVIEWER) ? (
-                  <NavDropdown
-                    data-testid="Dashboards"
-                    title={
-                      <>
-                        <i className="fa fa-tachometer fa-lg fa-fw mr-2" />
-                        {t("Dashboards")}
-                      </>
-                    }
-                    id="dashboard-dropdown"
-                    className={`main-nav nav-item ${
-                      pathname.match(
-                        createURLPathMatchExp("metrics", baseUrl)
-                      ) ||
-                      pathname.match(createURLPathMatchExp("insights", baseUrl))
-                        ? "active-tab-dropdown"
-                        : ""
-                    }`}
-                  >
-                    <NavDropdown.Item
+
+               <Nav.Link
                       as={Link}
                       to={`${baseUrl}metrics`}
+                      data-testid="Dashboards"
                       className={`main-nav nav-item ${
                         pathname.match(
                           createURLPathMatchExp("metrics", baseUrl)
-                        )
+                        ) || pathname.match(
+                              createURLPathMatchExp("insights", baseUrl)
+                            )
                           ? "active-tab"
                           : ""
                       }`}
                     >
-                      <i className="fa fa-pie-chart fa-fw fa-lg" />
-                      {t("Metrics")}
-                    </NavDropdown.Item>
-                    {getUserInsightsPermission() && (
-                      <NavDropdown.Item
-                        as={Link}
-                        to={`${baseUrl}insights`}
-                        className={`main-nav nav-item ${
-                          pathname.match(
-                            createURLPathMatchExp("insights", baseUrl)
-                          )
-                            ? "active-tab"
-                            : ""
-                        }`}
-                      >
-                        <i className="fa fa-lightbulb-o fa-fw fa-lg" />{" "}
-                        {t("Insights")}
-                      </NavDropdown.Item>
-                    )}
-                  </NavDropdown>
-                ) : null}
+                      {" "}
+                      <i className="fa fa-tachometer fa-lg fa-fw mr-2" />
+                         {t("Dashboards")}
+                    </Nav.Link>
+                  ) : null}
               </Nav>
 
               <Nav className="ml-lg-auto mr-auto px-lg-0 px-3">
-                <NavDropdown
-                  title={
-                    <>
-                      <i className="fa fa-globe fa-lg mr-2" />
-                      {lang ? lang : "LANGUAGE"}
-                    </>
-                  }
-                  id="basic-nav-dropdown"
-                >
-                  {selectLanguages.map((e, index) => (
-                    <NavDropdown.Item
-                      key={index}
-                      onClick={() => {
-                        handleOnclick(e.name);
-                      }}
-                    >
-                      {e.value}{" "}
-                    </NavDropdown.Item>
-                  ))}
-                </NavDropdown>
+                {selectLanguages.length === 1 ? (
+                  selectLanguages.map((e, i) => {
+                    return (
+                      <>
+                        <i className="fa fa-globe fa-lg mr-1 mt-1" />
+                        <h4 key={i}>{e.name}</h4>
+                      </>
+                    );
+                  })
+                ) : (
+                  <NavDropdown
+                    title={
+                      <>
+                        <i className="fa fa-globe fa-lg mr-2" />
+                        {lang ? lang : "LANGUAGE"}
+                      </>
+                    }
+                    id="basic-nav-dropdown"
+                  >
+                    {selectLanguages.map((e, index) => (
+                      <NavDropdown.Item
+                        key={index}
+                        onClick={() => {
+                          handleOnclick(e.name);
+                        }}
+                      >
+                        {e.value}{" "}
+                      </NavDropdown.Item>
+                    ))}
+                  </NavDropdown>
+                )}
               </Nav>
 
               <Nav className="ml-lg-auto mr-auto px-lg-0 px-3">
